@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Jacque Jeme - Interactive Design Studio</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&family=Outfit:wght@300;500;700&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+    <!-- Supabase JS Client -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+</head>
+
+<body>
+    <!-- Starfield Background -->
+    <canvas id="starfield"></canvas>
+
+    <!-- Header -->
+    <header>
+        <div class="logo">
+            <svg width="80" height="80" viewBox="0 0 100 100">
+                <defs>
+                    <linearGradient id="logo-grad" x1="0%" y1="0%" x2="100%" y2="100%">
+                        <stop offset="0%" style="stop-color:#00474F;stop-opacity:1" />
+                        <stop offset="100%" style="stop-color:#008A9E;stop-opacity:1" />
+                    </linearGradient>
+                    <filter id="logo-glow" x="-50%" y="-50%" width="200%" height="200%">
+                        <feGaussianBlur stdDeviation="3" result="blur" />
+                        <feComposite in="SourceGraphic" in2="blur" operator="over" />
+                    </filter>
+                </defs>
+                <circle cx="50" cy="50" r="45" fill="none" stroke="#C2F0F7" stroke-width="2" opacity="0.3" />
+                <path d="M 30 25 L 70 25 L 70 75 Q 70 85 50 85 Q 30 85 30 75 L 30 60" fill="none"
+                    stroke="url(#logo-grad)" stroke-width="8" stroke-linecap="round" filter="url(#logo-glow)" />
+                <text x="50" y="60" text-anchor="middle" fill="#C2F0F7" font-family="'Outfit', sans-serif"
+                    font-size="32" font-weight="bold">JJ</text>
+            </svg>
+            <h1>Jacque Jeme</h1>
+        </div>
+        <nav>
+            <a href="#home">Home</a>
+            <a href="#gallery">Gallery</a>
+            <a href="#about">About</a>
+            <a href="#contact">Contact</a>
+        </nav>
+    </header>
+
+    <!-- Main Content -->
+    <main>
+        <div class="container">
+            <!-- Control Panel -->
+            <aside class="control-panel">
+                <h2>Model Settings</h2>
+
+                <!-- Gender Selection -->
+                <div class="control-group">
+                    <label>Gender</label>
+                    <div class="button-group">
+                        <button class="gender-btn active" data-gender="female">Female</button>
+                        <button class="gender-btn" data-gender="male">Male</button>
+                    </div>
+                </div>
+
+                <!-- Body Measurements -->
+                <div class="control-group">
+                    <h3>Body Measurements</h3>
+
+                    <label for="height">Height (cm): <span id="height-value">170</span></label>
+                    <input type="range" id="height" min="150" max="200" value="170" step="1">
+
+                    <label for="shoulders">Shoulders (cm): <span id="shoulders-value">40</span></label>
+                    <input type="range" id="shoulders" min="30" max="60" value="40" step="1">
+
+                    <label for="chest">Chest (cm): <span id="chest-value">90</span></label>
+                    <input type="range" id="chest" min="70" max="130" value="90" step="1">
+
+                    <label for="waist">Waist (cm): <span id="waist-value">70</span></label>
+                    <input type="range" id="waist" min="50" max="110" value="70" step="1">
+
+                    <label for="hips">Hips (cm): <span id="hips-value">95</span></label>
+                    <input type="range" id="hips" min="70" max="130" value="95" step="1">
+
+                    <label for="armLength">Arm Length (cm): <span id="armLength-value">65</span></label>
+                    <input type="range" id="armLength" min="50" max="85" value="65" step="1">
+
+                    <label for="legLength">Leg Length (cm): <span id="legLength-value">90</span></label>
+                    <input type="range" id="legLength" min="70" max="120" value="90" step="1">
+
+                    <label for="neckSize">Neck Size (cm): <span id="neckSize-value">35</span></label>
+                    <input type="range" id="neckSize" min="25" max="50" value="35" step="1">
+                </div>
+
+                <!-- Pose Options -->
+                <div class="control-group">
+                    <h3>Pose Selection</h3>
+                    <div class="button-group pose-group">
+                        <button class="pose-btn active" data-pose="standing">Standing</button>
+                        <button class="pose-btn" data-pose="walking">Walking</button>
+                    </div>
+                    <div class="button-group pose-group">
+                        <button class="pose-btn" data-pose="arms-out">Arms Out</button>
+                        <button class="pose-btn" data-pose="sitting">Sitting</button>
+                    </div>
+                </div>
+
+                <!-- Color Gradient Options -->
+                <div class="control-group">
+                    <h3>Outfit Color Gradient</h3>
+                    <label for="color1">Color 1:</label>
+                    <input type="color" id="color1" value="#00474F">
+
+                    <label for="color2">Color 2:</label>
+                    <input type="color" id="color2" value="#C2F0F7">
+
+                    <button id="apply-gradient">Apply Gradient</button>
+
+                    <div class="preset-gradients">
+                        <label>Presets:</label>
+                        <div class="gradient-grid">
+                            <div class="grad-preset" style="background: linear-gradient(135deg, #00474F, #C2F0F7);"
+                                data-c1="#00474F" data-c2="#C2F0F7"></div>
+                            <div class="grad-preset" style="background: linear-gradient(135deg, #001a1f, #00B4CC);"
+                                data-c1="#001a1f" data-c2="#00B4CC"></div>
+                            <div class="grad-preset" style="background: linear-gradient(135deg, #4A2C2A, #FFD5B5);"
+                                data-c1="#4A2C2A" data-c2="#FFD5B5"></div>
+                            <div class="grad-preset" style="background: linear-gradient(135deg, #000000, #C2F0F7);"
+                                data-c1="#000000" data-c2="#C2F0F7"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Texture Options -->
+                <div class="control-group">
+                    <h3>Texture</h3>
+                    <select id="texture">
+                        <option value="solid">Solid</option>
+                        <option value="striped">Striped</option>
+                        <option value="dotted">Dotted</option>
+                        <option value="geometric">Geometric</option>
+                        <option value="plaid">Plaid</option>
+                        <option value="waves">Waves</option>
+                        <option value="sparkles">Sparkles</option>
+                        <option value="diagonal">Diagonal</option>
+                    </select>
+                </div>
+
+                <!-- Animation Speed Control -->
+                <div class="control-group">
+                    <h3>Space Effect Speed</h3>
+                    <label for="spaceSpeed">Speed: <span id="spaceSpeed-value">1.0x</span></label>
+                    <input type="range" id="spaceSpeed" min="0.1" max="3" value="1" step="0.1">
+                </div>
+
+                <!-- File Upload -->
+                <div class="control-group">
+                    <h3>Upload Design</h3>
+                    <input type="file" id="file-upload" accept="image/*">
+                    <div id="upload-preview"></div>
+                </div>
+
+                <!-- Save/Load Configuration -->
+                <div class="control-group">
+                    <h3>Save & Load</h3>
+                    <input type="text" id="config-name" placeholder="Enter design name..." maxlength="50">
+                    <button id="save-config" class="save-btn">💾 Save Configuration</button>
+                    <button id="load-configs" class="load-btn">📂 Load Saved Designs</button>
+                </div>
+
+                <!-- Export Screenshot -->
+                <div class="control-group">
+                    <button id="export-screenshot" class="export-btn">📸 Export Screenshot</button>
+                </div>
+
+                <!-- Reset Button -->
+                <button id="reset" class="reset-btn">Reset to Defaults</button>
+            </aside>
+
+            <!-- Model Display -->
+            <section class="model-display">
+                <div class="model-container">
+                    <svg id="human-model" viewBox="0 0 200 400" xmlns="http://www.w3.org/2000/svg">
+                        <!-- Female Model (default) -->
+                        <g id="female-model" class="model active">
+                            <!-- Head -->
+                            <ellipse cx="100" cy="40" rx="20" ry="25" fill="#FFD5B5" class="head" />
+                            <!-- Hair -->
+                            <path
+                                d="M 80 30 Q 75 20 80 15 Q 85 10 100 10 Q 115 10 120 15 Q 125 20 120 30 L 115 40 Q 110 35 100 35 Q 90 35 85 40 Z"
+                                fill="#4A2C2A" class="hair" />
+                            <!-- Neck -->
+                            <rect x="95" y="60" width="10" height="15" fill="#FFD5B5" class="neck" />
+                            <!-- Shoulders/Upper Body -->
+                            <path id="female-shoulders"
+                                d="M 60 80 L 60 90 L 65 95 L 80 95 L 85 100 L 85 150 L 80 160 L 70 180 L 65 200 L 65 230 L 70 250 L 75 270 L 80 295 L 85 320 L 90 350 L 95 380"
+                                stroke="#FFD5B5" stroke-width="8" fill="none" class="left-arm" />
+                            <path id="female-right-arm"
+                                d="M 140 80 L 140 90 L 135 95 L 120 95 L 115 100 L 115 150 L 120 160 L 130 180 L 135 200 L 135 230 L 130 250 L 125 270 L 120 295 L 115 320 L 110 350 L 105 380"
+                                stroke="#FFD5B5" stroke-width="8" fill="none" class="right-arm" />
+                            <!-- Torso -->
+                            <path id="female-torso"
+                                d="M 75 75 Q 60 80 60 90 L 65 150 Q 70 180 75 200 L 80 250 L 85 280 L 90 300 L 95 320 L 100 340 L 105 320 L 110 300 L 115 280 L 120 250 L 125 200 Q 130 180 135 150 L 140 90 Q 140 80 125 75 Q 100 65 75 75"
+                                fill="url(#outfit-gradient)" class="outfit" />
+                            <!-- Legs -->
+                            <path id="female-legs" d="M 95 340 L 92 360 L 90 380 L 88 390" stroke="#FFD5B5"
+                                stroke-width="10" fill="none" class="left-leg" />
+                            <path id="female-right-leg" d="M 105 340 L 108 360 L 110 380 L 112 390" stroke="#FFD5B5"
+                                stroke-width="10" fill="none" class="right-leg" />
+                        </g>
+
+                        <!-- Male Model -->
+                        <g id="male-model" class="model">
+                            <!-- Head -->
+                            <ellipse cx="100" cy="40" rx="22" ry="27" fill="#FFD5B5" class="head" />
+                            <!-- Hair -->
+                            <path
+                                d="M 78 25 Q 75 15 85 12 Q 95 10 100 10 Q 105 10 115 12 Q 125 15 122 25 L 118 35 Q 112 30 100 30 Q 88 30 82 35 Z"
+                                fill="#2C1810" class="hair" />
+                            <!-- Neck -->
+                            <rect x="93" y="62" width="14" height="18" fill="#FFD5B5" class="neck" />
+                            <!-- Shoulders/Arms -->
+                            <path id="male-shoulders"
+                                d="M 50 85 L 55 90 L 60 95 L 70 100 L 75 110 L 75 150 L 73 180 L 70 210 L 68 240 L 65 270 L 63 300 L 60 330 L 58 360 L 55 385"
+                                stroke="#FFD5B5" stroke-width="12" fill="none" class="left-arm" />
+                            <path id="male-right-arm"
+                                d="M 150 85 L 145 90 L 140 95 L 130 100 L 125 110 L 125 150 L 127 180 L 130 210 L 132 240 L 135 270 L 137 300 L 140 330 L 142 360 L 145 385"
+                                stroke="#FFD5B5" stroke-width="12" fill="none" class="right-arm" />
+                            <!-- Torso -->
+                            <path id="male-torso"
+                                d="M 70 80 Q 50 85 50 95 L 55 130 L 60 170 L 65 210 L 70 250 L 75 280 L 80 310 L 85 335 L 90 350 L 95 360 L 100 365 L 105 360 L 110 350 L 115 335 L 120 310 L 125 280 L 130 250 L 135 210 L 140 170 L 145 130 L 150 95 Q 150 85 130 80 Q 100 70 70 80"
+                                fill="url(#outfit-gradient)" class="outfit" />
+                            <!-- Legs -->
+                            <path id="male-legs" d="M 93 365 L 91 380 L 89 390" stroke="#FFD5B5" stroke-width="14"
+                                fill="none" class="left-leg" />
+                            <path id="male-right-leg" d="M 107 365 L 109 380 L 111 390" stroke="#FFD5B5"
+                                stroke-width="14" fill="none" class="right-leg" />
+                        </g>
+
+                        <!-- Gradient Definition -->
+                        <defs>
+                            <linearGradient id="outfit-gradient" x1="0%" y1="0%" x2="0%" y2="100%">
+                                <stop offset="0%" style="stop-color:#00474F;stop-opacity:1" />
+                                <stop offset="100%" style="stop-color:#C2F0F7;stop-opacity:1" />
+                            </linearGradient>
+                            <!-- Texture Patterns -->
+                            <pattern id="striped-pattern" patternUnits="userSpaceOnUse" width="10" height="10">
+                                <line x1="0" y1="0" x2="0" y2="10" stroke="#C2F0F7" stroke-width="5" />
+                            </pattern>
+                            <pattern id="dotted-pattern" patternUnits="userSpaceOnUse" width="15" height="15">
+                                <circle cx="7.5" cy="7.5" r="3" fill="#C2F0F7" />
+                            </pattern>
+                            <pattern id="geometric-pattern" patternUnits="userSpaceOnUse" width="20" height="20">
+                                <path d="M 0 0 L 10 10 L 0 20 L -10 10 Z" fill="#C2F0F7" opacity="0.5" />
+                            </pattern>
+                            <pattern id="plaid-pattern" patternUnits="userSpaceOnUse" width="30" height="30">
+                                <rect width="30" height="30" fill="#00474F" />
+                                <line x1="0" y1="0" x2="30" y2="0" stroke="#C2F0F7" stroke-width="3" />
+                                <line x1="0" y1="15" x2="30" y2="15" stroke="#C2F0F7" stroke-width="2" opacity="0.5" />
+                                <line x1="0" y1="0" x2="0" y2="30" stroke="#C2F0F7" stroke-width="3" />
+                                <line x1="15" y1="0" x2="15" y2="30" stroke="#C2F0F7" stroke-width="2" opacity="0.5" />
+                            </pattern>
+                            <pattern id="waves-pattern" patternUnits="userSpaceOnUse" width="40" height="20">
+                                <path d="M 0 10 Q 10 0 20 10 T 40 10" stroke="#C2F0F7" stroke-width="3" fill="none" />
+                                <path d="M 0 15 Q 10 5 20 15 T 40 15" stroke="#C2F0F7" stroke-width="2" fill="none"
+                                    opacity="0.5" />
+                            </pattern>
+                            <pattern id="sparkles-pattern" patternUnits="userSpaceOnUse" width="25" height="25">
+                                <circle cx="5" cy="5" r="1.5" fill="#C2F0F7" />
+                                <circle cx="15" cy="15" r="2" fill="#C2F0F7" />
+                                <circle cx="20" cy="8" r="1" fill="#C2F0F7" opacity="0.7" />
+                                <circle cx="8" cy="18" r="1.2" fill="#C2F0F7" opacity="0.8" />
+                            </pattern>
+                            <pattern id="diagonal-pattern" patternUnits="userSpaceOnUse" width="15" height="15">
+                                <line x1="0" y1="0" x2="15" y2="15" stroke="#C2F0F7" stroke-width="4" />
+                                <line x1="-5" y1="10" x2="10" y2="25" stroke="#C2F0F7" stroke-width="4" />
+                                <line x1="10" y1="-5" x2="25" y2="10" stroke="#C2F0F7" stroke-width="4" />
+                            </pattern>
+                        </defs>
+                    </svg>
+                </div>
+
+                <!-- Measurements Display -->
+                <div class="measurements-display">
+                    <h3>Current Measurements</h3>
+                    <div class="measurement-grid">
+                        <div><strong>Height:</strong> <span id="display-height">170</span> cm</div>
+                        <div><strong>Shoulders:</strong> <span id="display-shoulders">40</span> cm</div>
+                        <div><strong>Chest:</strong> <span id="display-chest">90</span> cm</div>
+                        <div><strong>Waist:</strong> <span id="display-waist">70</span> cm</div>
+                        <div><strong>Hips:</strong> <span id="display-hips">95</span> cm</div>
+                        <div><strong>Arms:</strong> <span id="display-armLength">65</span> cm</div>
+                        <div><strong>Legs:</strong> <span id="display-legLength">90</span> cm</div>
+                        <div><strong>Neck:</strong> <span id="display-neckSize">35</span> cm</div>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer>
+        <p>&copy; 2026 Jacque Jeme. All Rights Reserved.</p>
+        <p>Interactive Design Studio | Space-Age Fashion</p>
+    </footer>
+
+    <script src="config.js"></script>
+    <script src="script.js"></script>
+    <script src="supabase-integration.js"></script>
+</body>
+
+</html>
